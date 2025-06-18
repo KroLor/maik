@@ -31,6 +31,10 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "status.h"
+#include "buzzer.h"
+#include "tim.h"
+#include "m_gnss.h"
 
 /* USER CODE END Includes */
 
@@ -49,6 +53,8 @@ extern "C" {
 
 /* USER CODE END EM */
 
+void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
+
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
 
@@ -59,6 +65,10 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 
 /* USER CODE BEGIN Private defines */
+#define RADIO GPIO_PIN_15
+#define GPS GPIO_PIN_8
+#define M0 GPIO_PIN_12
+#define M1 GPIO_PIN_13
 
 /* USER CODE END Private defines */
 
