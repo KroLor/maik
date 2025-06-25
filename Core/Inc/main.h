@@ -63,6 +63,10 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define M0_Pin GPIO_PIN_12
+#define M0_GPIO_Port GPIOB
+#define M1_Pin GPIO_PIN_13
+#define M1_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 #define RADIO GPIO_PIN_15

@@ -1,0 +1,4 @@
+../Core/Src/radio.c:4:6:E220_CheckStatus	24	static
+../Core/Src/radio.c:27:6:E220_Init	8	static
+../Core/Src/radio.c:41:6:E220_SendCommand	16	static
+../Core/Src/radio.c:46:9:E220_ReceiveHandler	136	static

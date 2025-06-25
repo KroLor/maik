@@ -25,6 +25,7 @@
 #include "buzzer.h"
 #include "tim.h"
 #include "m_gnss.h"
+#include "radio.h"
 
 /* USER CODE END Includes */
 
@@ -68,6 +69,7 @@ static void MX_USART2_UART_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 system_status sys_status = INIT;
+// uint8_t response;
 
 /* USER CODE END 0 */
 
@@ -113,6 +115,7 @@ int main(void)
 
   // MX_USART2_UART_Init();
   // GNSS_Init();  
+  E220_Init();
 
   // HAL_GPIO_WritePin(GPIOB, M0|M1, GPIO_PIN_RESET);
 
@@ -123,11 +126,11 @@ int main(void)
   while (1)
   {
     if (sys_status == INIT) {
-      /* Статус радиo
-      if (...) {
+      // Статус радиo
+      if (E220_CheckStatus()) {
         HAL_GPIO_WritePin(GPIOB, RADIO, GPIO_PIN_SET);
       }
-      // Статус GPS
+      /* // Статус GPS
       if (...) {
         HAL_GPIO_WritePin(GPIOA, GPS, GPIO_PIN_SET);
       } */
@@ -137,7 +140,9 @@ int main(void)
 
     if (sys_status == WHILE) {
       // Проверяем радио
-      
+      if (E220_ReceiveHandler() == "landing") {
+        sys_status = RUN;
+      }
     }
 
     if (sys_status == RUN) {
@@ -397,13 +402,13 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_15|GPIO_PIN_9, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, M0_Pin|M1_Pin|GPIO_PIN_15|GPIO_PIN_9, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : PB12 PB13 PB15 PB9 */
-  GPIO_InitStruct.Pin = GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_15|GPIO_PIN_9;
+  /*Configure GPIO pins : M0_Pin M1_Pin PB15 PB9 */
+  GPIO_InitStruct.Pin = M0_Pin|M1_Pin|GPIO_PIN_15|GPIO_PIN_9;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
