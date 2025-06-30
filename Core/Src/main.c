@@ -52,10 +52,9 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-bool send_status = true;
-#define RX_BUFFER_SIZE 128
-char rx_buffer[RX_BUFFER_SIZE];
-uint16_t rx_index = 0;
+bool send_status = false;
+GPS_Data gps_data_to_send;  // Для хранения данных GPS перед отправкой
+bool gps_data_ready = false; // Флаг готовности данных
 
 /* USER CODE END PV */
 
@@ -103,19 +102,18 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM2_Init();
   MX_TIM3_Init();
-  MX_TIM4_Init();
   MX_USART1_UART_Init();
   MX_USART2_UART_Init();
+  MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
   buzzer_set_freq(2000);
 
   __HAL_TIM_SET_COUNTER(&htim3, 0);
   __HAL_TIM_CLEAR_FLAG(&htim3, TIM_SR_UIF);
 
+  GPS_Init(&huart2);
   radio_init();
   HAL_Delay(100);
-
-  HAL_UART_Receive_IT(&huart2, (uint8_t*)&rx_buffer[0], 1);
 
   HAL_TIM_Base_Start_IT(&htim3);
 
@@ -150,14 +148,26 @@ int main(void)
       // buzzer_stop();
       HAL_Delay(100);
 
-      if (send_status) {
+      if (send_status) 
+      {
         send_status = false;
-        char msg[256] = "SEND\n\r";
-        send_message(msg, PRIORITY_HIGH);
+        
+        if (gps_data_ready) 
+        {
+          char msg[256];
+          // Форматируем данные GPS в строку
+          snprintf(msg, sizeof(msg), "LAT:%.6f,LON:%.6f,ALT:%.1f",
+                  gps_data_to_send.latitude, 
+                  gps_data_to_send.longitude,
+                  gps_data_to_send.altitude);
+          
+          // Отправляем сообщение
+          send_message(msg, PRIORITY_HIGH);
+          
+          gps_data_ready = false;  // Сбрасываем флаг
+        }
       }
-
     }
-    
 
     /* USER CODE END WHILE */
 
@@ -224,8 +234,21 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     sys_status = RUN;
     HAL_TIM_Base_Start_IT(&htim4);
   }
-  if (htim->Instance == TIM4) {
-    send_status = true;
+
+  if (htim->Instance == TIM4) 
+  {
+    // Получить данные из GPS
+    GPS_Data* current_data = GPS_GetData();
+    
+    // Если есть фикс, сохраняем данные для отправки
+    if (current_data->fix_status >= 1) {
+        gps_data_to_send = *current_data;  // Копируем данные
+        gps_data_ready = true;             // Устанавливаем флаг готовности
+
+        HAL_GPIO_TogglePin(GPIOA, GPS);
+    }
+    
+    send_status = true;  // Разрешаем отправку
   }
 }
 
