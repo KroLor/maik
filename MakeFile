@@ -1,7 +1,7 @@
 ######################################
 # target
 ######################################
-TARGET = Vela
+TARGET = Maik
 
 
 ######################################
@@ -25,6 +25,9 @@ BUILD_DIR = build
 # C sources
 C_SOURCES =  \
 Core/Src/main.c \
+Core/Src/m_gnss.c \
+modules/src/sensors/radio.c \
+modules/src/communication.c \
 Core/Src/stm32f4xx_it.c \
 Core/Src/stm32f4xx_hal_msp.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c.c \
@@ -57,7 +60,7 @@ Core/Src/usart.c \
 Core/Src/spi.c
 # ASM sources
 ASM_SOURCES =  \
-startup_stm32f411xe.s
+startup_stm32f411ceux.s
 
 # ASM sources
 ASMM_SOURCES = 
@@ -115,6 +118,8 @@ AS_INCLUDES =
 # C includes
 C_INCLUDES =  \
 -ICore/Inc \
+-Imodules/inc \
+-Imodules/inc/sensors \
 -IDrivers/STM32F4xx_HAL_Driver/Inc \
 -IDrivers/STM32F4xx_HAL_Driver/Inc/Legacy \
 -IDrivers/CMSIS/Device/ST/STM32F4xx/Include \

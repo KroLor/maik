@@ -28,7 +28,9 @@
 #include "buzzer.h"
 #include "tim.h"
 #include "m_gnss.h"
-//#include "radio.h"
+#include "radio.h"
+#include "system_definitions.h"
+#include "communication.h"
 
 /* USER CODE END Includes */
 
@@ -50,6 +52,10 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+bool send_status = true;
+#define RX_BUFFER_SIZE 128
+char rx_buffer[RX_BUFFER_SIZE];
+uint16_t rx_index = 0;
 
 /* USER CODE END PV */
 
@@ -97,6 +103,7 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM2_Init();
   MX_TIM3_Init();
+  MX_TIM4_Init();
   MX_USART1_UART_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
@@ -104,13 +111,13 @@ int main(void)
 
   __HAL_TIM_SET_COUNTER(&htim3, 0);
   __HAL_TIM_CLEAR_FLAG(&htim3, TIM_SR_UIF);
+
+  radio_init();
+  HAL_Delay(100);
+
+  HAL_UART_Receive_IT(&huart2, (uint8_t*)&rx_buffer[0], 1);
+
   HAL_TIM_Base_Start_IT(&htim3);
-
-  // MX_USART2_UART_Init();
-  // GNSS_Init();  
-  //E220_Init();
-
-  // HAL_GPIO_WritePin(GPIOB, M0|M1, GPIO_PIN_RESET);
 
   /* USER CODE END 2 */
 
@@ -120,38 +127,35 @@ int main(void)
   {
     if (sys_status == INIT) {
       // Статус радиo
-      //if (E220_CheckStatus()) {
-        //HAL_GPIO_WritePin(GPIOB, RADIO, GPIO_PIN_SET);
-      //}
-      /* // Статус GPS
-      if (...) {
-        HAL_GPIO_WritePin(GPIOA, GPS, GPIO_PIN_SET);
-      } */
+      if (radio_is_enabled()) {
+        HAL_GPIO_WritePin(led_radio_GPIO_Port, led_radio_Pin, GPIO_PIN_SET);
+      }
+      // Статус GPS
+      // if () {
+      //   HAL_GPIO_WritePin(GPIOA, GPS, GPIO_PIN_SET);
+      // }
       
       sys_status = WHILE;
     }
 
     if (sys_status == WHILE) {
-      // Проверяем радио
-      //if (E220_ReceiveHandler() == "landing") {
-        //sys_status = RUN;
-      //}
+      // if (... == "landing") {
+      //   sys_status = RUN;
+      // }
     }
 
     if (sys_status == RUN) {
-      buzzer_start();
-      HAL_Delay(2000);
-      buzzer_stop();
-      HAL_Delay(2000);
+      // buzzer_start();
+      // HAL_Delay(1000);
+      // buzzer_stop();
+      HAL_Delay(100);
 
-      // GPS
-      float latitude = gnss_data.latitude;  // Широта в градусах
-      float longitude = gnss_data.longitude; // Долгота в градусах
-      float altitude = gnss_data.altitude;  // Высота в метрах
-      uint8_t sats = gnss_data.satellites; // Количество спутников, с которыми работает GPS-модуль
+      if (send_status) {
+        send_status = false;
+        char msg[256] = "SEND\n\r";
+        send_message(msg, PRIORITY_HIGH);
+      }
 
-      // Отправляем положение по радио
-      
     }
     
 
@@ -214,9 +218,14 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   if (htim->Instance == TIM3)
   {
     HAL_TIM_Base_Stop_IT(&htim3);
-    // HAL_GPIO_WritePin(GPIOB, RADIO, GPIO_PIN_SET);
+    HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+    HAL_GPIO_WritePin(led_radio_GPIO_Port, led_radio_Pin, GPIO_PIN_RESET);
 
     sys_status = RUN;
+    HAL_TIM_Base_Start_IT(&htim4);
+  }
+  if (htim->Instance == TIM4) {
+    send_status = true;
   }
 }
 

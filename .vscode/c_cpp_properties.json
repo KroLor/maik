@@ -20,7 +20,9 @@
         "Drivers/CMSIS/Device/ST/STM32F4xx/Include",
         "Drivers/CMSIS/Include",
         "Drivers/STM32F4xx_HAL_Driver/Inc",
-        "Drivers/STM32F4xx_HAL_Driver/Inc/Legacy"
+        "Drivers/STM32F4xx_HAL_Driver/Inc/Legacy",
+        "modules/inc",
+        "modules/inc/sensors"
       ],
       "defines": [
         "STM32F411xE",

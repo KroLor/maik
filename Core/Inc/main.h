@@ -35,6 +35,9 @@ extern "C" {
 #include "buzzer.h"
 #include "tim.h"
 #include "m_gnss.h"
+#include "system_definitions.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 /* USER CODE END Includes */
 
@@ -65,9 +68,10 @@ void Error_Handler(void);
 #define M0_GPIO_Port GPIOB
 #define M1_Pin GPIO_PIN_13
 #define M1_GPIO_Port GPIOB
+#define led_radio_Pin GPIO_PIN_15
+#define led_radio_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
-#define RADIO GPIO_PIN_15
 #define GPS GPIO_PIN_8
 #define M0 GPIO_PIN_12
 #define M1 GPIO_PIN_13
