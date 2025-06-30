@@ -77,7 +77,6 @@ endif
 C_SOURCES =  \
 Core/Src/buzzer.c \
 Core/Src/gpio.c \
-Core/Src/m_gnss.c \
 Core/Src/main.c \
 Core/Src/stm32f4xx_hal_msp.c \
 Core/Src/stm32f4xx_it.c \
@@ -103,6 +102,7 @@ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c \
 modules/src/communication.c \
+modules/src/sensors/gnss.c \
 modules/src/sensors/radio.c
 
 

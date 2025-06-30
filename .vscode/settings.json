@@ -67,7 +67,10 @@
     "gpio.h": "c",
     "math.h": "c",
     "tim.h": "c",
-    "stm32f4xx_hal.h": "c"
+    "stm32f4xx_hal.h": "c",
+    "gnss.h": "c",
+    "buzzer.h": "c",
+    "status.h": "c"
   },
   "cortex-debug.armToolchainPath": "c:\\Users\\tokpl\\AppData\\Roaming\\Code\\User\\globalStorage\\bmd.stm32-for-vscode\\@xpack-dev-tools\\arm-none-eabi-gcc\\14.2.1-1.1.1\\.content\\bin",
   "cortex-debug.openocdPath": "c:\\Users\\tokpl\\AppData\\Roaming\\Code\\User\\globalStorage\\bmd.stm32-for-vscode\\@xpack-dev-tools\\openocd\\0.12.0-6.1\\.content\\bin\\openocd.EXE"

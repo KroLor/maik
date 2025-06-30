@@ -25,7 +25,7 @@ BUILD_DIR = build
 # C sources
 C_SOURCES =  \
 Core/Src/main.c \
-Core/Src/m_gnss.c \
+modules/src/sensors/gnss.c \
 modules/src/sensors/radio.c \
 modules/src/communication.c \
 Core/Src/stm32f4xx_it.c \

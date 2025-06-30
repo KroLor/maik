@@ -27,7 +27,7 @@
 #include "status.h"
 #include "buzzer.h"
 #include "tim.h"
-#include "m_gnss.h"
+#include "gnss.h"
 #include "radio.h"
 #include "system_definitions.h"
 #include "communication.h"

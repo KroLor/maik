@@ -34,7 +34,7 @@ extern "C" {
 #include "status.h"
 #include "buzzer.h"
 #include "tim.h"
-#include "m_gnss.h"
+#include "gnss.h"
 #include "system_definitions.h"
 #include <stdlib.h>
 #include <stdio.h>
